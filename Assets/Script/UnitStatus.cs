@@ -1,44 +1,117 @@
-ï»¿using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
-public class UnitStatus : MonoBehaviour
+[Serializable]
+[CreateAssetMenu(fileName = "UnitStatus", menuName = "CreateUnitStatus")]
+public class UnitStatus : ScriptableObject
 {
-    [SerializeField]
-    private int maxHp, atk, def;    //  ä½“åŠ›ã€æ”»æ’ƒåŠ›ã€é˜²å¾¡åŠ›
-    [SerializeField]
-    private float moveSpeed, atkSpeed;    //  ç§»å‹•é€Ÿåº¦ã€æ”»æ’ƒé€Ÿåº¦ã€‚ç§’é–“ã«å¹¾ã¤ã®è¨ˆç®—
-
-    //  å¯å¤‰ã™ã‚‹å€¤
-    public int hp; //  ç¾åœ¨ä½“åŠ›
-    public float atkWaitTime;  //  æ”»æ’ƒå¾…æ©Ÿæ™‚é–“ã€‚atkSpeedã¾ã§ã„ã£ãŸã‚‰æ”»æ’ƒ
-
-    /// <summary>
-    /// æ”»æ’ƒé€Ÿåº¦ã«å¿œã˜ã¦æ”»æ’ƒã™ã‚‹ã€‚
-    /// </summary>
-    /// <param name="target">æ”»æ’ƒå¯¾è±¡</param>
-    /// <param name="dt">ãƒ‡ãƒ«ã‚¿ã‚¿ã‚¤ãƒ </param>
-    public void AttackAction(GameObject target, float dt)
+    public enum AtkType
     {
-        atkWaitTime += dt;
-        if (atkWaitTime >= atkSpeed)
-        {
-            target.GetComponent<UnitStatus>().DamageAction(this);
-            ResetAtkWaitTime();    //  æ”»æ’ƒã—ãŸã®ã§ãƒªã‚»ãƒƒãƒˆ
-        }
+        CUBE,
+        SPHERE,
+        CYLINDER,
+        CAPSULE
+    }
+    public enum Element
+    {
+        RED,
+        GREEN,
+        BLUE,
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="us"></param>
-    public void DamageAction(UnitStatus us)
-    {
+    //  ‰Â•Ï‚µ‚È‚¢’l Šî‘bUŒ‚—Í‚Æ‚©‚Í‚±‚±‚Å
+    [SerializeField]
+    private string unitName;    //  ƒ†ƒjƒbƒg–¼
+    [SerializeField]
+    private AtkType atkType;
+    [SerializeField]
+    private Element element;
+    [SerializeField]
+    private int id, maxLv, maxHp, atk, def;    //  IDAÅ‘åƒŒƒxƒ‹A‘Ì—ÍAUŒ‚—ÍA–hŒä—Í
+    [SerializeField]
+    private float upAtkRate, upDefRate, upHpRate;    //  ƒŒƒxƒ‹‚É‚æ‚éUŒ‚—ÍA–hŒäA‘Ì—Í‚Ìã¸”{—¦ 1.0‚É‰ÁZ‚µ‚Ä‚¢‚­Œ`
+    [SerializeField]
+    private float moveSpeed, atkSpeed, skillSpeed;    //  ˆÚ“®‘¬“xAUŒ‚‘¬“xAƒXƒLƒ‹”­“®‰Â”\‘¬“xB•bŠÔ‚ÉŠô‚Â‚ÌŒvZ
+    [SerializeField]
+    private GameObject prefab;  //  ƒ†ƒjƒbƒg‚ÌƒvƒŒƒnƒuî•ñ
 
+    public UnitStatus(UnitStatus us)
+    {
+        this.unitName = us.getUnitName();
+        this.atkType = us.getAtkType();
+        this.element = us.getElement();
+        this.id = us.getID();
+        this.maxLv = us.getMaxLv();
+        this.maxHp = us.getMaxHp();
+        this.atk = us.getAtk();
+        this.def = us.getDef();
+        this.upAtkRate = us.getUpAtkRate();
+        this.upDefRate = us.getUpDefRate();
+        this.upHpRate = us.getUpHpRate();
+        this.moveSpeed = us.getMoveSpeed();
+        this.atkSpeed = us.getAtkSpeed();
+        this.skillSpeed = us.getSkillSpeed();
+        this.prefab = us.getPrefab();
     }
 
-    public void ResetAtkWaitTime()
+    public int getID()
     {
-        atkWaitTime = 0;
+        return id;
+    }
+    public float getAtkSpeed()
+    {
+        return atkSpeed;
+    }
+    public float getMoveSpeed()
+    {
+        return moveSpeed;
+    }
+    public float getSkillSpeed()
+    {
+        return skillSpeed;
+    }
+    public int getMaxHp()
+    {
+        return maxHp;
+    }
+    public int getMaxLv()
+    {
+        return maxLv;
+    }
+    public int getAtk()
+    {
+        return atk;
+    }
+    public int getDef()
+    {
+        return def;
+    }
+    public string getUnitName()
+    {
+        return unitName;
+    }
+    public AtkType getAtkType()
+    {
+        return atkType;
+    }
+    public Element getElement()
+    {
+        return element;
+    }
+    public float getUpAtkRate()
+    {
+        return upAtkRate;
+    }
+    public float getUpDefRate()
+    {
+        return upDefRate;
+    }
+    public float getUpHpRate()
+    {
+        return upHpRate;
+    }
+    public GameObject getPrefab()
+    {
+        return prefab;
     }
 }

@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef62a30f00b63b444a03b1403ef916db, type: 3}
+  m_Name: SPHERE-G
+  m_EditorClassIdentifier: 
+  unitName: SPHERE-G
+  atkType: 1
+  element: 1
+  id: 6
+  maxLv: 30
+  maxHp: 80
+  atk: 15
+  def: 5
+  upAtkRate: 1
+  upDefRate: 1
+  upHpRate: 1
+  moveSpeed: 1
+  atkSpeed: 1
+  skillSpeed: 6
+  prefab: {fileID: 5433169799152881124, guid: d0fe5e00c71c78546a709da87799e934, type: 3}

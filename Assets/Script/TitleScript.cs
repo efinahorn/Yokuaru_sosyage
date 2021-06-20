@@ -41,6 +41,7 @@ public class TitleScript : MonoBehaviour
     /// </summary>
     void SceneChange()
     {
+        GameSession.Instance.LoadUserData();
         float _interval = float.Parse(m_work[1]);
         GameSession.Instance.SceneChange(m_work[0], _interval);
     }

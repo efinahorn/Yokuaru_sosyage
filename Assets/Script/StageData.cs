@@ -4,8 +4,17 @@ using UnityEngine;
 
 public class StageData : MonoBehaviour
 {
+    public enum SquareType
+    {
+        EMPTY = 0,
+        WALL = 1,
+        GOAL = 2,
+        SPAWN = 3,
+        MAX,
+    }
     private string map_Matrix;   //  マップのマス配置情報が入っている
-    private SquaresData[][] squaresData;  //  マス自体の情報
+    public int[,] squaresData = new int[10,13];  //  マス自体の情報
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,8 +39,7 @@ public class StageData : MonoBehaviour
     {
         map_Matrix = mapMatrix;
         string[] map_matrix_arr = map_Matrix.Split(':');    //  配列数はZ軸
-        int[] objcnt = new int[(int)SquareType.MAX];
-        squaresData = new SquaresData[map_matrix_arr.Length][];
+
         for (int z = 0; z < map_matrix_arr.Length; z++)
         {
             //xを元に配列の要素を取り出す
@@ -41,9 +49,7 @@ public class StageData : MonoBehaviour
             {
                 //配列から取り出した１要素に値が入っているのでこれを１文字づつ取り出す
                 int obj = int.Parse(z_map.Substring(x, 1));
-                squaresData[z][x] = new SquaresData();
-                squaresData[z][x].setSquareData((byte)obj, (byte)objcnt[obj]);
-                objcnt[obj]++;
+                squaresData[z,x] = obj;
             }
         }
 
@@ -55,23 +61,74 @@ public class StageData : MonoBehaviour
     /// </summary>
     /// <param name="num">指定のスポーン地点の座標を返す。-1であれば一番若いスポーン。</param>
     /// <returns></returns>
-    public Vector2 getSpawnPos(int num)
+    public Vector3 GetSpawnPos(int num = -1)
     {
-        for (int z = 0; z < squaresData.Length; z++)
+        Vector3 spawnPos = new Vector3(-1, 0, -1);
+        int spawnCnt = 0;
+        for (int z = 0; z < squaresData.GetLength(0); z++)
         {
-            for (int x = 0; x < squaresData[z].Length; x++)
+            for (int x = 0; x < squaresData.GetLength(1); x++)
             {
-                SquaresData sqdata = squaresData[z][x];
-                if ( sqdata.squareType == (byte)SquareType.SPAWN)
+                if (squaresData[z, x] == (int)SquareType.SPAWN)
                 {
-                    if(num == sqdata.squareNum || num < 0)
+                    if (num == spawnCnt || num < 0)
                     {
-                        return new Vector2(x+1, z+1);   //  実座標は+1の地点で有る
+                        return new Vector3(x + 1, 0, z + 1);   //  実座標は+1の地点で有る
                     }
+                    else
+                    {
+                        //  仮にその後見つからなかったら現状見つけたやつを返す
+                        spawnPos.Set(x + 1, 0, z + 1);
+                    }
+                    spawnCnt++;
                 }
             }
         }
 
-        return new Vector2(-1,-1);   //  見つからなかった。
+        return spawnPos;   //  見つからなかった。
+    }
+
+    /// <summary>
+    /// ゴール地点の座標を返す
+    /// </summary>
+    /// <param name="num">指定のゴール地点の座標を返す。-1であれば一番若いゴール。</param>
+    /// <returns></returns>
+    public Vector3 GetGoalPos(int num = -1)
+    {
+        Vector3 goalPos = new Vector3(-1, 0, -1);
+        int spawnCnt = 0;
+        for (int z = 0; z < squaresData.GetLength(0); z++)
+        {
+            for (int x = 0; x < squaresData.GetLength(1); x++)
+            {
+                if (squaresData[z, x] == (int)SquareType.GOAL)
+                {
+                    if (num == spawnCnt || num < 0)
+                    {
+                        return new Vector3(x + 1, 0, z + 1);   //  実座標は+1の地点で有る
+                    }
+                    else
+                    {
+                        //  仮にその後見つからなかったら現状見つけたやつを返す
+                        goalPos.Set(x + 1, 0, z + 1);
+                    }
+                    spawnCnt++;
+                }
+            }
+        }
+
+        return goalPos;   //  見つからなかった。
+    }
+
+    /// <summary>
+    /// 指定座標に一番近いマス情報を返す
+    /// </summary>
+    public int GetSquareData(Vector3 pos)
+    {
+        if (pos.x < squaresData.GetLength(1) 
+            && pos.x > 0 
+            && pos.z < squaresData.GetLength(0) 
+            && pos.z > 0) return squaresData[(int)pos.z-1, (int)pos.x-1];
+        return -1;  //  エリアアウトしてる
     }
 }

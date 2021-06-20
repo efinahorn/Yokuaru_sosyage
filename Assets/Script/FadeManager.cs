@@ -96,9 +96,9 @@ public class FadeManager : MonoBehaviour
             //Debug.Log(async.progress);
             yield return new WaitForEndOfFrame();
         }
-
+#if UNITY_EDITOR
         Debug.Log("Scene Loaded. Scene name is \"" + scene + "\".");
-
+#endif
         yield return new WaitForSeconds(1);
 
         async.allowSceneActivation = true;    // シーン遷移許可

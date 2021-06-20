@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 /// <summary>
 /// 参考:https://raharu0425.hatenablog.com/entry/20130131/1359601502
@@ -15,6 +16,10 @@ public class StageGenerator : MonoBehaviour
 	private int default_x_max = 13;
 	[SerializeField]
 	private int default_z_max = 10;
+
+	public GamePlayerScript playerScript;
+	public GameObject unitButtonParent;
+	public GameObject unitButtonUI;
 
 	//これがマップの元になるデータ(逆さまになってるから数値で見るときは注意)
 	const string map_matrix =	"300000000000:" +
@@ -34,6 +39,8 @@ public class StageGenerator : MonoBehaviour
 		CreateMapWaku();
 		// 引数にこれを入れてマップ生成する
 		CreateMap();
+		GameSession.Instance.LoadUserData();
+		CreateTeamUI();
 	}
 
 	//枠を作るメソッド
@@ -81,17 +88,17 @@ public class StageGenerator : MonoBehaviour
 
 				//もしも1だったら壁ということで壁のプレハブをインスタンス化してループして出したx座標z座標を指定して設置
 				//0がなにもない空白
-				if (obj == 1)
+				if (obj == (int)StageData.SquareType.WALL)
 				{
 					//Instantiate(wallPrefab, new Vector3(x + 1, 0, z + 1), Quaternion.identity);
 					StageAddChild(wallPrefab, x+1, z+1);
 				}
-				else if (obj == 2)	//	敵が向かうゴール
+				else if (obj == (int)StageData.SquareType.GOAL)	//	敵が向かうゴール
 				{
 					//Instantiate(goalPrefab, new Vector3(x + 1, 0, z + 1), Quaternion.identity);
 					StageAddChild(goalPrefab, x+1, z+1);
 				}
-				else if (obj == 3)	//	敵のスポーン地点
+				else if (obj == (int)StageData.SquareType.SPAWN)	//	敵のスポーン地点
 				{
 					//Instantiate(spawnPrefab, new Vector3(x + 1, 0, z + 1), Quaternion.identity);
 					StageAddChild(spawnPrefab, x+1, z+1);
@@ -114,22 +121,37 @@ public class StageGenerator : MonoBehaviour
 		_prefab.transform.SetParent( parentPrefab.transform);
 	}
 
-	void StageSave()
+	public void StageSave()
     {
 		StageData stageData = parentPrefab.GetComponent<StageData>();
 		if( stageData == null) stageData = parentPrefab.AddComponent<StageData>();  //	無かったら付ける
 		stageData.setData(map_matrix);
 	}
 
-	void TestEnemy()
+	public void TestEnemy()
     {
-		Vector2 spawnPos = parentPrefab.GetComponent<StageData>().getSpawnPos(-1);
+		StageData stageData = parentPrefab.GetComponent<StageData>();
+		Vector3 spawnPos = stageData.GetSpawnPos(-1);
 		if( spawnPos.x < 0)
         {
 			Debug.Log("Nothing spawn square.");
 			return;
         }
-		GameObject obj = Instantiate(testEnemy, new Vector3(spawnPos.x, 0, spawnPos.y), Quaternion.identity);
+		GameObject obj = Instantiate(testEnemy, new Vector3(spawnPos.x, 0, spawnPos.z), Quaternion.identity);
+		obj.GetComponent<EnemyScript>().goalPos = stageData.GetGoalPos(-1);
 
 	}
+
+	public void CreateTeamUI()
+    {
+		UserData ud = GameSession.Instance.userData;
+		// ユーザーデータを元にUIプレハブを呼び出し入れる
+		for( int i=0; i<ud.team.Length; i++)
+        {
+			if (ud.units[ud.team[i]].id <= 0) continue;	//	起きたら困る
+			GameObject obj = Instantiate(unitButtonUI, unitButtonParent.transform.position + new Vector3(50*i,0,0), Quaternion.identity);
+			obj.transform.parent = unitButtonParent.transform;
+			obj.GetComponent<Button>().onClick.AddListener(()=> { playerScript.SetUnitMode(i); });
+        }
+    }
 }

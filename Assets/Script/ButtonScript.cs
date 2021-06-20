@@ -22,4 +22,5 @@ public class ButtonScript : MonoBehaviour
     {
         GameSession.Instance.Quit();
     }
+
 }

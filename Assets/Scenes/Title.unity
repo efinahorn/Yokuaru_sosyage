@@ -235,7 +235,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_work:
-  - Title
+  - GameMain
   - 1.0
 --- !u!114 &522559337
 MonoBehaviour:
@@ -604,6 +604,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d00459dc9da5f5549841b25d3e9a513f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitDataBase: {fileID: 11400000, guid: b501011286e099c438d76461798a4540, type: 2}
+  userData:
+    playerName: 
+    playerLevel: 0
+    gameMoney: 0
+    jewel: 0
+    units: []
+    team: 
+    maxUnit: 0
 --- !u!4 &1871317507
 Transform:
   m_ObjectHideFlags: 0

@@ -1,8 +1,21 @@
 using System;
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+
 
 public class GameSession : SingletonMonoBehaviourFast<GameSession>
 {
+    //----------------------------------------- データベース系 ---------------------------------------
+    public UnitDataBase unitDataBase;
+    public UserData userData;
+
+
+    //----------------------------------------- シーン遷移系 ---------------------------------------
     /// <summary>
     /// シーン変更時に使用。処理をこっちに持ってきてもいいが
     /// 流石にオールインにすると見辛いので別スクリプトにしてる。
@@ -57,7 +70,7 @@ public class GameSession : SingletonMonoBehaviourFast<GameSession>
         //  エラーチェック。フリーズ防止。深刻なエラーの場合はゲーム終了案内を出して終了する
         try
         {
-
+            if (Input.GetKeyDown(KeyCode.Escape)) Quit();
         }
         catch (Exception ex)
         {
@@ -96,4 +109,82 @@ public class GameSession : SingletonMonoBehaviourFast<GameSession>
     {
         return m_fadeManager.isFading();
     }
+
+
+    //----------------------------------------- データ系 ---------------------------------------
+    /// <summary>
+    /// ロードする。タイトルぐらいでしかやらないと思う
+    /// </summary>
+    public void LoadUserData()
+    {
+        userData.InitUserData();
+        if (!System.IO.File.Exists(Application.dataPath + "/filedata.dat"))
+        {
+            userData.CreateUserData();    //  ない場合は作る
+            Save();
+        }
+
+        Load();
+    }
+
+    //　ファイルストリーム
+    private FileStream fileStream;
+    //　バイナリフォーマッター
+    private BinaryFormatter bf;
+
+    public void Save()
+    {
+        bf = new BinaryFormatter();
+        fileStream = null;
+
+        try
+        {
+            //　ゲームフォルダにfiledata.datファイルを作成
+            fileStream = File.Create(Application.dataPath + "/filedata.dat");
+            //　ファイルにクラスを保存
+            bf.Serialize(fileStream, userData);
+        }
+        catch (IOException e1)
+        {
+            Debug.Log("ファイルオープンエラー");
+        }
+        finally
+        {
+            if (fileStream != null)
+            {
+                fileStream.Close();
+            }
+        }
+    }
+
+    public void Load()
+    {
+        bf = new BinaryFormatter();
+        fileStream = null;
+
+        try
+        {
+            //　ファイルを読み込む
+            fileStream = File.Open(Application.dataPath + "/filedata.dat", FileMode.Open);
+            //　読み込んだデータをデシリアライズ
+            userData = bf.Deserialize(fileStream) as UserData;
+        }
+        catch (FileNotFoundException e1)
+        {
+            Debug.Log("ファイルがありません");
+        }
+        catch (IOException e2)
+        {
+            Debug.Log("ファイルオープンエラー");
+        }
+        finally
+        {
+            if (fileStream != null)
+            {
+                fileStream.Close();
+            }
+        }
+
+    }
+
 }
