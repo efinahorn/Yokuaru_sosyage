@@ -58,3 +58,11 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+#Suriyunフォルダ以下”を除外
+Suriyun/
+Suriyun.meta
+
+#Various Genres Music Collectionフォルダ以下”を除外
+Various Genres Music Collection/
+Various Genres Music Collection.meta
+
