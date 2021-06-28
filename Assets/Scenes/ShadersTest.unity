@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 921e5b57098fdca418c49009a92612ac, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -1309,7 +1309,7 @@ ParticleSystem:
     m_BurstCount: 0
     m_Bursts: []
   SizeModule:
-    enabled: 0
+    enabled: 1
     curve:
       serializedVersion: 2
       minMaxState: 1
@@ -6373,7 +6373,7 @@ ParticleSystem:
     m_BurstCount: 0
     m_Bursts: []
   SizeModule:
-    enabled: 0
+    enabled: 1
     curve:
       serializedVersion: 2
       minMaxState: 1
@@ -10527,7 +10527,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "WASD:\u79FB\u52D5\n\u30DE\u30A6\u30B9\u30DF\u30C9\u30EB\u30AF\u30EA\u30C3\u30AF\u3067\u30C9\u30E9\u30C3\u30B0:\u30AB\u30E1\u30E9\u56DE\u8EE2\n\u30DE\u30A6\u30B9\u30DB\u30A4\u30FC\u30EB:\u30C9\u30EA\u30FC\u30A4\u30F3\u3001\u30C9\u30EA\u30FC\u30A2\u30A6\u30C8"
+  m_Text: "WASD:\u79FB\u52D5\n\u30DB\u30A4\u30FC\u30EB\u30DB\u30FC\u30EB\u30C9\u3067\u30C9\u30E9\u30C3\u30B0:\u30AB\u30E1\u30E9\u56DE\u8EE2\n\u30DE\u30A6\u30B9\u30DB\u30A4\u30FC\u30EB:\u30C9\u30EA\u30FC\u30A4\u30F3\u3001\u30C9\u30EA\u30FC\u30A2\u30A6\u30C8"
 --- !u!222 &1791006119
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -15626,7 +15626,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2070144659}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 0, y: 1, z: -4.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

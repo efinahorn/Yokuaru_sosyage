@@ -20,6 +20,22 @@ public class CameraManager : MonoBehaviour
 	void Start() {
 		if (target == null) target = GameObject.FindGameObjectWithTag("Player").transform;
 		offset = target.position + new Vector3( 0, correction.y, distance);
+		Debug.Log(target.eulerAngles.y % 360.0f / 360.0f * 2.0f);
+		_nowmove += new Vector2(target.eulerAngles.y%360.0f/360.0f*-2.0f,0); //	最初にキャラが向いてる方向と反対の位置に配置しておく
+		Vector3 pos = DistancePosition();
+		transform.position = pos + target.position;
+	}
+
+	//	自キャラからの距離とオフセットを含めた移動後の座標位置を返す
+	Vector3 DistancePosition()
+	{
+		Vector3 pos = Vector3.zero;
+		pos.x = distance * Mathf.Sin(_nowmove.y * Mathf.PI) * Mathf.Sin(_nowmove.x * Mathf.PI);
+		pos.y = -distance * Mathf.Cos(_nowmove.y * Mathf.PI);
+		pos.z = -distance * Mathf.Sin(_nowmove.y * Mathf.PI) * Mathf.Cos(_nowmove.x * Mathf.PI);
+		pos *= offset.z;
+		pos.y += offset.y;
+		return pos;
 	}
 
 	//	更新はコントロールマネージャーでする
@@ -38,23 +54,16 @@ public class CameraManager : MonoBehaviour
 	}
 
 	void FixedUpdate() {
-		Vector3 pos = Vector3.zero;
 		_nowmove += new Vector2(_cameramove.x * horizontalspd, _cameramove.y * verticalspd);
 		//	左右回転オーバーフロー対策(そもそも数値残し方が悪い節はある)
 		if (_nowmove.x > 2.0f) _nowmove.x -= 2.0f;
 		if (_nowmove.x < -2.0f) _nowmove.x += 2.0f;
 		//	上下回転限度処理
 		_nowmove.y = Mathf.Clamp(_nowmove.y, 0.3f, 0.95f);
-		
+
 		// 球面座標系変換
-		pos.x = distance * Mathf.Sin(_nowmove.y * Mathf.PI) * Mathf.Cos(_nowmove.x * Mathf.PI);
-		pos.y = -distance * Mathf.Cos(_nowmove.y * Mathf.PI);
-		pos.z = -distance * Mathf.Sin(_nowmove.y * Mathf.PI) * Mathf.Sin(_nowmove.x * Mathf.PI);
+		Vector3 pos = DistancePosition();
 
-		pos *= offset.z;
-
-		pos.y += offset.y;
-		
 		// 座標の更新
 		Vector3 targetCamPos = pos + target.position;  //	カメラの移動先
 		Vector3 rayPos = target.position + correction; //	誤差分レイキャストの始点をズラす。じゃないとパンツ見える
