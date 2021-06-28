@@ -20,8 +20,7 @@ public class CameraManager : MonoBehaviour
 	void Start() {
 		if (target == null) target = GameObject.FindGameObjectWithTag("Player").transform;
 		offset = target.position + new Vector3( 0, correction.y, distance);
-		Debug.Log(target.eulerAngles.y % 360.0f / 360.0f * 2.0f);
-		_nowmove += new Vector2(target.eulerAngles.y%360.0f/360.0f*-2.0f,0); //	最初にキャラが向いてる方向と反対の位置に配置しておく
+		_nowmove += new Vector2(target.eulerAngles.y % 360.0f / 360.0f * -2.0f, 0); //	最初にキャラが向いてる方向と反対の位置に配置しておく
 		Vector3 pos = DistancePosition();
 		transform.position = pos + target.position;
 	}
